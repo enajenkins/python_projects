@@ -11,7 +11,7 @@ import random
 # define global constants to limit the amounts the user can enter. constant values are all caps and do not change. 
 MAX_LINES = 3
 MAX_BET = 100
-MIN_BET = 1
+MIN_BET = 10
 
 # define global constants to simulate the revolving reels 
 ROWS = 3
@@ -54,7 +54,7 @@ def check_winnings(columns, lines, bet, values):
                 break
         else: # else statement with for loop that will run if break is executed
             winnings += values[symbol] * bet
-            winning_lines.appemd(lines + 1)
+            winning_lines.append(lines + 1)
 
     return winnings, winning_lines
 
@@ -226,11 +226,8 @@ def get_bet():
 #deposit()
 
 
-''' --- DEFINE THE MAIN PROGRAM --- '''
-# set up main function for your program so you can re-run the game if the user wants to play again
-def main():
-    # calculate the bets and balances
-    balance = deposit()
+''' --- EXECUTES ONE SINGLE GAME PLAY --- '''
+def spin(balance):
     lines = get_number_of_lines()
 
     # check to make sure the bet amount is not more than the available balance
@@ -245,17 +242,35 @@ def main():
             break
 
     print(f"You are betting ${bet} on {lines} lines. Your total bet is ${total_bet}.")
-    #print(f"Your remaining balance is ${balance}")
+    
 
-
-    ''' --- SPIN THE SLOTS --- '''
+    # spin the slots
     slots = get_slot_machine_spin(ROWS, COLUMNS, symbol_count)
     print_slot_machine(slots)
 
-    ''' --- CALCULATE WINNINGS --- '''
+    # calculate winnings
     winnings, winning_lines = check_winnings(slots, lines, bet, symbol_value)
     print(f"You won ${winnings}!")
     print(f"These are your winning lines: ", *winning_lines)
+
+    # 
+    return winnings - total_bet
+
+
+''' --- DEFINE THE MAIN PROGRAM --- '''
+# set up main function for your program so you can re-run the game if the user wants to play again
+def main():
+    # calculate the bets and balances
+    balance = deposit()
+    while True:
+        print(f"Your remaining balance is ${balance}")
+        spin_again = input("Press ENTER to play or input q to quit.").lower()
+        if spin_again == "q":
+            break
+        # if the loop doesn't break, update the balance with the amount returned from the spin() function
+        balance += spin(balance)
+
+    print(f"You left with ${balance}")
 
 # call the main() function to run everything
 main()
