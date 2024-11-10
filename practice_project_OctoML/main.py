@@ -25,6 +25,39 @@ symbol_count = {
     "D": 8    
 }
 
+# define a global dictionary to define each symbol's multiplier
+symbol_value = {
+    "A": 5,
+    "B": 4,
+    "C": 3,
+    "D": 2    
+}
+
+
+''' --- HELPER FUNCTION TO CHECK THE SLOT LINES FOR MATCHES AND RETURN WINNINGS --- '''
+def check_winnings(columns, lines, bet, values):
+    winnings = 0
+    winning_lines = []
+
+    # look through each of the the slot result rows for a win
+    for line in range(lines):
+        # check to see if all symbols in the current line are the same:
+        # get the symbol that is in the first column of the row
+        symbol = columns[0][line]
+        # loop through the columns to compare the first symbol to each one in the line
+        for column in columns:
+            # the symbol to check = column at the current row we are looking at
+            symbol_to_check = column[line]
+            # if there is a mismatch, exit this loop and go back to the previous loop to check the next line
+            # if you reach the end of the loop without breaking, the symbols are the same and the won.
+            if symbol != symbol_to_check:
+                break
+        else: # else statement with for loop that will run if break is executed
+            winnings += values[symbol] * bet
+            winning_lines.appemd(lines + 1)
+
+    return winnings, winning_lines
+
 
 ''' --- HELPER FUNCTION TO GENERATE A RANDOM SLOT MACHINE RESULT --- '''
 # pass in the reel values needed
@@ -218,6 +251,11 @@ def main():
     ''' --- SPIN THE SLOTS --- '''
     slots = get_slot_machine_spin(ROWS, COLUMNS, symbol_count)
     print_slot_machine(slots)
+
+    ''' --- CALCULATE WINNINGS --- '''
+    winnings, winning_lines = check_winnings(slots, lines, bet, symbol_value)
+    print(f"You won ${winnings}!")
+    print(f"These are your winning lines: ", *winning_lines)
 
 # call the main() function to run everything
 main()
