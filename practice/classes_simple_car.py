@@ -35,6 +35,7 @@ class SimpleCar:
         print(f'Car has driven: {self.miles} miles')
         
 if __name__ == "__main__":
+    print() # added to temporarily fix error
     # TODO: Create SimpleCar object
     # TODO: Drive input number of miles forward
     # TODO: Drive input number of miles in reverse
