@@ -1,8 +1,93 @@
-''' Practice Project - SLOT MACHINE '''
+''' Practice Project - SLOT MACHINE (super simple) '''
+
+# import random to generate gambling results
+''' NOTE: random is not part of the math module in Python
+    random.randint(a, b): Returns a random integer between a and b (inclusive).
+    random.choice(sequence): Returns a random element from a non-empty sequence (like a list).
+    random.random(): Returns a random float between 0.0 and 1.0.
+'''
+import random
+
 # define global constants to limit the amounts the user can enter. constant values are all caps and do not change. 
 MAX_LINES = 3
 MAX_BET = 100
 MIN_BET = 1
+
+# define global constants to simulate the revolving reels 
+ROWS = 3
+COLUMNS = 3
+
+# define a global dictionary to define how many of each symbol is on a reel
+symbol_count = {
+    "A": 2,
+    "B": 4,
+    "C": 6,
+    "D": 8    
+}
+
+
+''' --- HELPER FUNCTION TO GENERATE A RANDOM SLOT MACHINE RESULT --- '''
+# pass in the reel values needed
+def get_slot_machine_spin(rows, cols, symbols):
+    # randomly pick values for the columns by creating a list of all possible values and randomly picking a value from the list
+    all_symbols = []
+    # loop through the dictionary and add the symbols to the list
+    # symbols.items() gives you both the key and the value from the dictionary. 
+    # This prevents you from having to reference the values manually while looping through the keys
+    for symbol, symbol_count in symbols.items():
+
+        # add symbols to list using another for loop and an anonymous var (_). 
+        # _ prevents an unused var error when the count doesn't matter (if var is greyed out and loop still works, you can use _)
+        # NOTE: if the loop above produces: symbol = A and symbol_count = 2, 
+        # then this second loop will run 2 times and add two A symbols to the all_symbols list
+        for _ in range(symbol_count): 
+            # add the symbol to the list
+            all_symbols.append(symbol)
+
+    # create a columns list that will contain the randomized lists of symbols for each slot column
+    # this will eventually result in a nested list: columns = [[], [], []]
+    columns = []     
+
+    # generate a number of columns based on the number you specified in the args. 
+    # for every column, generate the values inside the columns (a certain number of symbols) based on the number of rows you have
+    for _ in range(cols):
+        column = []
+        # NOTE: if there are only 2 of the symbol A available, it should not be added more than twice
+        # create a copy of the all_symbols list to work with during the loop 
+        current_symbols = all_symbols[:]
+
+        # loop through the number of values that you need to generate which is equal to the number of rows you need to generate.
+        for _ in range(rows):
+            # pick randoom values for each row in the column. 
+            value = random.choice(current_symbols) 
+            # remove the value you just added from the working list so you dont pick it again
+            current_symbols.remove(value)
+            # add that value to the column list
+            column.append(value)
+
+        # add column you just created to the slot columns list
+        columns.append(column)
+
+    # return the columns nested list (where every interior list gives you the symbol values for each column).
+    return columns
+
+
+''' --- HELPER FUNCTION TO PRINT OUT THE SLOTS--- '''
+def print_slot_machine(columns):
+    # transpose the columns (flip or rotate to correct display orientation)
+    # number of rows is based on the number of elements in each column
+    for row in range(len(columns[0])):
+        # loop trough the columns and only print the first value
+        # use the enumerate() method to (ADD EXPLAINATION HERE)
+        for i, column in enumerate(columns):
+            # if the current item is not the last item in the list, print the pipe seperator
+            if i != len(columns) -1:
+                print(column[row], end=" | ")
+            # otherwise dont print a pipe
+            else:
+                print(column[row], end="")
+        print()
+
 
 ''' --- HELPER FUNCTION TO COLLECT THE AMOUNT THE USER WANTS TO DEPOSIT FOR BETTING --- '''
 # get deposit user has entered
@@ -108,7 +193,6 @@ def get_bet():
 #deposit()
 
 
-
 ''' --- DEFINE THE MAIN PROGRAM --- '''
 # set up main function for your program so you can re-run the game if the user wants to play again
 def main():
@@ -131,7 +215,9 @@ def main():
     #print(f"Your remaining balance is ${balance}")
 
 
+    ''' --- SPIN THE SLOTS --- '''
+    slots = get_slot_machine_spin(ROWS, COLUMNS, symbol_count)
+    print_slot_machine(slots)
+
 # call the main() function to run everything
 main()
-
-
