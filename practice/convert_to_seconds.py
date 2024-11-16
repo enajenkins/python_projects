@@ -1,16 +1,18 @@
-#Get Hours
+''' Convert hours, minutes, and seconds into total seconds '''
+
+# Get Hours
 input_hours = int(input())
-#print(input_hours)
+# print(input_hours)
 input_hours_in_seconds = input_hours * 3600
 
-#Get Minutes
+# Get Minutes
 input_minutes = int(input())
-#print(input_minutes)
+# print(input_minutes)
 input_minutes_in_seconds = input_minutes * 60
 
-#Get Seconds
+# Get Seconds
 input_seconds = int(input())
-#print(input_seconds)
+# print(input_seconds)
 
-#Total Seconds
+# Total Seconds
 print(f"Seconds: {input_hours_in_seconds + input_minutes_in_seconds + input_seconds}")
